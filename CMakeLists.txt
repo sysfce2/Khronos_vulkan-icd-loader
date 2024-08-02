@@ -18,7 +18,7 @@
 # ~~~
 cmake_minimum_required(VERSION 3.17.2)
 
-project(VULKAN_LOADER VERSION 1.3.289 LANGUAGES C)
+project(VULKAN_LOADER VERSION 1.3.292 LANGUAGES C)
 
 option(CODE_COVERAGE "Enable Code Coverage" OFF)
 if (CODE_COVERAGE)
@@ -170,7 +170,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(loader_common_options INTERFACE -Wno-missing-field-initializers)
 
     # need to prepend /clang: to compiler arguments when using clang-cl
-    if (CMAKE_C_COMPILER_ID STREQUAL "Clang" AND "${CMAKE_CXX_SIMULATE_ID}" MATCHES "MSVC")
+    if (CMAKE_C_COMPILER_ID STREQUAL "Clang" AND "${CMAKE_C_COMPILER_FRONTEND_VARIANT}" MATCHES "MSVC")
         target_compile_options(loader_common_options INTERFACE /clang:-fno-strict-aliasing)
     else()
         target_compile_options(loader_common_options INTERFACE -fno-strict-aliasing)

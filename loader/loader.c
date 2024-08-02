@@ -2573,7 +2573,8 @@ VkResult loader_read_layer_json(const struct loader_instance *inst, struct loade
         result = loader_parse_json_string(functions, "vkGetInstanceProcAddr", &props.functions.str_gipa);
         if (result == VK_ERROR_OUT_OF_HOST_MEMORY) goto out;
 
-        if (props.functions.str_gipa && loader_check_version_meets_required(loader_combine_version(1, 1, 0), version)) {
+        if (NULL == props.functions.str_negotiate_interface && props.functions.str_gipa &&
+            loader_check_version_meets_required(loader_combine_version(1, 1, 0), version)) {
             loader_log(inst, VULKAN_LOADER_INFO_BIT, 0,
                        "Layer \"%s\" using deprecated \'vkGetInstanceProcAddr\' tag which was deprecated starting with JSON "
                        "file version 1.1.0. The new vkNegotiateLoaderLayerInterfaceVersion function is preferred, though for "
@@ -2584,7 +2585,8 @@ VkResult loader_read_layer_json(const struct loader_instance *inst, struct loade
         result = loader_parse_json_string(functions, "vkGetDeviceProcAddr", &props.functions.str_gdpa);
         if (result == VK_ERROR_OUT_OF_HOST_MEMORY) goto out;
 
-        if (props.functions.str_gdpa && loader_check_version_meets_required(loader_combine_version(1, 1, 0), version)) {
+        if (NULL == props.functions.str_negotiate_interface && props.functions.str_gdpa &&
+            loader_check_version_meets_required(loader_combine_version(1, 1, 0), version)) {
             loader_log(inst, VULKAN_LOADER_INFO_BIT, 0,
                        "Layer \"%s\" using deprecated \'vkGetDeviceProcAddr\' tag which was deprecated starting with JSON "
                        "file version 1.1.0. The new vkNegotiateLoaderLayerInterfaceVersion function is preferred, though for "
@@ -5323,7 +5325,8 @@ VKAPI_ATTR VkResult VKAPI_CALL terminator_CreateInstance(const VkInstanceCreateI
                    "#LLP_LAYER_21)");
     } else if (LOADER_MAGIC_NUMBER != ptr_instance->magic) {
         loader_log(ptr_instance, VULKAN_LOADER_WARN_BIT, 0,
-                   "terminator_CreateInstance: Instance pointer (%p) has invalid MAGIC value 0x%08lx. Instance value possibly "
+                   "terminator_CreateInstance: Instance pointer (%p) has invalid MAGIC value 0x%08" PRIx64
+                   ". Instance value possibly "
                    "corrupted by active layer (Policy #LLP_LAYER_21).  ",
                    ptr_instance, ptr_instance->magic);
     }
@@ -5719,7 +5722,8 @@ VKAPI_ATTR VkResult VKAPI_CALL terminator_CreateDevice(VkPhysicalDevice physical
                    "#LLP_LAYER_22)");
     } else if (DEVICE_DISP_TABLE_MAGIC_NUMBER != dev->loader_dispatch.core_dispatch.magic) {
         loader_log(icd_term->this_instance, VULKAN_LOADER_WARN_BIT, 0,
-                   "terminator_CreateDevice: Device pointer (%p) has invalid MAGIC value 0x%08lx. The expected value is "
+                   "terminator_CreateDevice: Device pointer (%p) has invalid MAGIC value 0x%08" PRIx64
+                   ". The expected value is "
                    "0x10ADED040410ADED. Device value possibly "
                    "corrupted by active layer (Policy #LLP_LAYER_22).  ",
                    dev, dev->loader_dispatch.core_dispatch.magic);
